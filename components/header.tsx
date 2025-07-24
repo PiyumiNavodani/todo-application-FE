@@ -1,5 +1,4 @@
 "use client"
-// This component serves as the application header, including search, filters, and statistics.
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -13,17 +12,17 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
-  totalTasks: number // Total number of tasks.
-  completedTasks: number // Number of completed tasks.
-  searchQuery: string // Current search query.
-  onSearchChange: (query: string) => void // Callback for search input changes.
-  showCompleted: boolean // Flag to show/hide completed tasks.
-  onToggleShowCompleted: () => void // Callback to toggle showCompleted.
-  filterDate: Date | undefined // Currently selected filter date.
-  onFilterDateChange: (date: Date | undefined) => void // Callback for date filter changes.
-  onFilterThisWeek: () => void // Callback for "This Week" filter button.
-  onFilterThisMonth: () => void // Callback for "This Month" filter button.
-  onClearFilters: () => void // Callback to clear all filters.
+  totalTasks: number 
+  completedTasks: number 
+  searchQuery: string 
+  onSearchChange: (query: string) => void 
+  showCompleted: boolean 
+  onToggleShowCompleted: () => void 
+  filterDate: Date | undefined 
+  onFilterDateChange: (date: Date | undefined) => void 
+  onFilterThisWeek: () => void 
+  onFilterThisMonth: () => void
+  onClearFilters: () => void 
 }
 
 export function Header({
@@ -43,11 +42,11 @@ export function Header({
   const progress = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100
 
   return (
-    // Sticky header for persistent navigation and controls.
+    
     <header className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b py-4 px-4 md:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-bold">To Do Tasks</h1> {/* Changed title here */}
-        {/* Search Bar */}
+        <h1 className="text-2xl font-bold">To Do Tasks</h1>
+        
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -57,7 +56,7 @@ export function Header({
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
-        {/* Stats Section (Total, Completed, Remaining tasks with progress bar) */}
+        
         <Card className="w-full md:w-auto flex-shrink-0">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -89,9 +88,8 @@ export function Header({
         </Card>
       </div>
 
-      {/* Filter Section */}
+    
       <div className="mt-4 flex flex-wrap items-center gap-2 md:gap-4">
-        {/* Date picker filter */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -106,15 +104,15 @@ export function Header({
             <Calendar mode="single" selected={filterDate} onSelect={onFilterDateChange} initialFocus />
           </PopoverContent>
         </Popover>
-        {/* "This Week" filter button */}
+        
         <Button variant="outline" onClick={onFilterThisWeek}>
           This Week
         </Button>
-        {/* "This Month" filter button */}
+
         <Button variant="outline" onClick={onFilterThisMonth}>
           This Month
         </Button>
-        {/* Toggle to show/hide completed tasks */}
+        
         <Toggle
           pressed={showCompleted}
           onPressedChange={onToggleShowCompleted}
@@ -122,7 +120,7 @@ export function Header({
         >
           {showCompleted ? "Show All" : "Show Pending"}
         </Toggle>
-        {/* Clear Filters button, shown only when filters are active */}
+        
         {(filterDate || searchQuery || showCompleted) && (
           <Button variant="ghost" onClick={onClearFilters}>
             Clear Filters

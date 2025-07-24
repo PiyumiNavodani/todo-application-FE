@@ -1,8 +1,5 @@
 "use client"
 
-// This component represents a modal dialog for adding or editing a task.
-// It uses the `Dialog` component from `shadcn/ui`.
-
 import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -18,21 +15,18 @@ import type { Task } from "@/lib/date-utils"
 import { cn } from "@/lib/utils"
 
 interface AddEditTaskDialogProps {
-  isOpen: boolean // Controls the visibility of the dialog
-  onClose: () => void // Callback function when the dialog is closed
-  onSave: (task: Task) => void // Callback function when a task is saved (new or updated)
-  initialTask?: Task | null // Optional: Task object to pre-fill the form for editing
+  isOpen: boolean 
+  onClose: () => void 
+  onSave: (task: Task) => void
+  initialTask?: Task | null 
 }
 
 export function AddEditTaskDialog({ isOpen, onClose, onSave, initialTask }: AddEditTaskDialogProps) {
-  // Component local state for form fields using React's useState hook.
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined)
   const [priority, setPriority] = useState<"low" | "medium" | "high" | undefined>(undefined)
 
-  // useEffect hook to initialize form fields when `initialTask` or `isOpen` changes.
-  // This ensures the form is pre-filled correctly for editing or reset for adding.
   useEffect(() => {
     if (initialTask) {
       setTitle(initialTask.title)
@@ -40,40 +34,37 @@ export function AddEditTaskDialog({ isOpen, onClose, onSave, initialTask }: AddE
       setDueDate(initialTask.dueDate ? new Date(initialTask.dueDate) : undefined)
       setPriority(initialTask.priority)
     } else {
-      // Reset form for adding a new task
       setTitle("")
       setDescription("")
       setDueDate(undefined)
       setPriority(undefined)
     }
-  }, [initialTask, isOpen]) // Dependencies: re-run effect if initialTask or isOpen changes
+  }, [initialTask, isOpen]) 
 
-  // Handles the save action, creating/updating a task object and calling the `onSave` callback.
+  
   const handleSave = () => {
-    if (!title.trim()) return // Basic validation: task title cannot be empty
+    if (!title.trim()) return 
 
     const newTask: Task = {
-      id: initialTask?.id || crypto.randomUUID(), // Use existing ID for edit, generate new for add
+      id: initialTask?.id || crypto.randomUUID(),
       title: title.trim(),
       description: description.trim() || undefined,
       dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
-      completed: initialTask?.completed || false, // Preserve completion status for edits
+      completed: initialTask?.completed || false, 
       priority: priority,
-      comments: initialTask?.comments || [], // Preserve comments for edits
+      comments: initialTask?.comments || [], 
     }
-    onSave(newTask) // Emit the saved task to the parent component
-    onClose() // Close the dialog
+    onSave(newTask)
+    onClose() 
   }
 
   return (
-    // Dialog component from shadcn/ui for the modal interface.
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{initialTask ? "Edit Task" : "Add New Task"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* Form fields for title, description, due date, and priority */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="title" className="text-right">
               Title

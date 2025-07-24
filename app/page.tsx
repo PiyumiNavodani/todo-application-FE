@@ -68,7 +68,6 @@ export default function HomePage() {
         const createdTask = await response.json();
       }
 
-      // Always refresh the task list after saving
       const refreshed = await fetch(`${API_BASE}`);
       const latest = await refreshed.json();
       setTasks(latest);
@@ -107,7 +106,6 @@ export default function HomePage() {
       });
       if (!response.ok) throw new Error("Delete failed");
 
-      // Always refresh task list after delete
       const refreshed = await fetch(`${API_BASE}`);
       const latest = await refreshed.json();
       setTasks(latest);
