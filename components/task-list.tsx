@@ -52,7 +52,7 @@ export function TaskList({ tasks, onToggleComplete, onEdit, onDelete, onAddComme
       })}
       {/* Message displayed when no tasks match the current filters/search */}
       {filteredTasks.length === 0 && (
-        <p className="text-center text-muted-foreground mt-8">No tasks to display. Add a new task!</p>
+        <p className="text-center text-muted-foreground mt-8">No tasks to display. Add + to create a new task!</p>
       )}
     </div>
   )

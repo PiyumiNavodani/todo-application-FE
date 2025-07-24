@@ -94,7 +94,7 @@ export function TaskCard({ task, onToggleComplete, onEdit, onDelete, onAddCommen
                   <div key={comment.id} className="bg-muted p-2 rounded-md text-sm">
                     <p>{comment.text}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {format(parseISO(comment.timestamp), "MMM dd, yyyy HH:mm")}
+                        {comment.timestamp}
                     </p>
                   </div>
                 ))

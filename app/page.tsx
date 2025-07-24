@@ -7,9 +7,8 @@ import { AddEditTaskDialog } from "@/components/add-edit-task-dialog"
 import { FAB } from "@/components/fab"
 import type { Task } from "@/lib/date-utils"
 import { isSameDay, isSameMonth, isSameWeek, parseISO, startOfMonth, startOfWeek, format } from "date-fns"
-import { ThemeProvider } from "next-themes"
 
-const API_BASE = "http://localhost:8086/api/tasks"
+const API_BASE = "http://localhost:8080/api/tasks"
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -49,34 +48,37 @@ export default function HomePage() {
 
   const handleSaveTask = async (taskToSave: Task) => {
     try {
-      const { id, ...taskDataToSend } = taskToSave
+      const { id, ...taskDataToSend } = taskToSave;
 
       if (editingTask) {
         const response = await fetch(`${API_BASE}/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(taskToSave),
-        })
-        if (!response.ok) throw new Error("Update failed")
-        const updatedTask = await response.json()
-        setTasks(tasks.map(task => (task.id === updatedTask.id ? updatedTask : task)))
+        });
+        if (!response.ok) throw new Error("Update failed");
+        const updatedTask = await response.json();
       } else {
         const response = await fetch(API_BASE, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(taskDataToSend),
-        })
-        if (!response.ok) throw new Error("Create failed")
-        const createdTask = await response.json()
-        setTasks([...tasks, createdTask])
+        });
+        if (!response.ok) throw new Error("Create failed");
+        const createdTask = await response.json();
       }
+
+      // Always refresh the task list after saving
+      const refreshed = await fetch(`${API_BASE}`);
+      const latest = await refreshed.json();
+      setTasks(latest);
     } catch (error) {
-      console.error("Failed to save task:", error)
+      console.error("Failed to save task:", error);
     } finally {
-      setEditingTask(null)
-      setIsAddEditDialogOpen(false)
-    }
-  }
+      setEditingTask(null);
+      setIsAddEditDialogOpen(false);
+    }
+  };
 
   const handleToggleComplete = async (id: string, completed: boolean) => {
     try {
@@ -102,13 +104,17 @@ export default function HomePage() {
     try {
       const response = await fetch(`${API_BASE}/${id}`, {
         method: "DELETE",
-      })
-      if (!response.ok) throw new Error("Delete failed")
-      setTasks(tasks.filter(task => task.id !== id))
+      });
+      if (!response.ok) throw new Error("Delete failed");
+
+      // Always refresh task list after delete
+      const refreshed = await fetch(`${API_BASE}`);
+      const latest = await refreshed.json();
+      setTasks(latest);
     } catch (error) {
-      console.error("Failed to delete task:", error)
-    }
-  }
+      console.error("Failed to delete task:", error);
+    }
+  };
 
   const handleAddComment = async (taskId: string, commentText: string) => {
     try {
@@ -168,7 +174,6 @@ export default function HomePage() {
   const completedTasks = tasks.filter((task) => task.completed).length
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="min-h-screen bg-background text-foreground">
         <Header
           totalTasks={totalTasks}
@@ -206,6 +211,5 @@ export default function HomePage() {
           initialTask={editingTask}
         />
       </div>
-    </ThemeProvider>
   )
 }

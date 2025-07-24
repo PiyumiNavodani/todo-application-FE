@@ -56,7 +56,7 @@ export function AddEditTaskDialog({ isOpen, onClose, onSave, initialTask }: AddE
       id: initialTask?.id || crypto.randomUUID(), // Use existing ID for edit, generate new for add
       title: title.trim(),
       description: description.trim() || undefined,
-      dueDate: dueDate ? dueDate.toISOString() : undefined, // Convert Date object to ISO string
+      dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
       completed: initialTask?.completed || false, // Preserve completion status for edits
       priority: priority,
       comments: initialTask?.comments || [], // Preserve comments for edits

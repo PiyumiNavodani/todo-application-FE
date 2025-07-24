@@ -11,7 +11,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
-import { useTheme } from "next-themes" // Hook for theme management
 
 interface HeaderProps {
   totalTasks: number // Total number of tasks.
@@ -42,7 +41,6 @@ export function Header({
 }: HeaderProps) {
   const tasksRemaining = totalTasks - completedTasks
   const progress = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100
-  const { theme, setTheme } = useTheme() // Manages dark/light theme state
 
   return (
     // Sticky header for persistent navigation and controls.
@@ -130,16 +128,6 @@ export function Header({
             Clear Filters
           </Button>
         )}
-        {/* Dark Mode toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          aria-label="Toggle dark mode"
-          className="ml-auto"
-        >
-          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </Button>
       </div>
     </header>
   )
